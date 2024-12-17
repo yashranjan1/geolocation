@@ -34,6 +34,7 @@ const UserSchema: Schema<User> = new Schema({
   role: {
     type: String,
     enum: ["admin", "service", "client"],
+    required: [true, "Role is required"],
   },
   avatar: {
     type: String,
@@ -49,8 +50,10 @@ const UserSchema: Schema<User> = new Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-const UserModel = (mongoose.models.User as mongoose.Model<User>) || mongoose.model<User>("User", UserSchema);
+const UserModel =
+  (mongoose.models.User as mongoose.Model<User>) ||
+  mongoose.model<User>("User", UserSchema);
