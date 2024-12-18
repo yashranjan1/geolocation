@@ -6,6 +6,7 @@ export interface User extends Document {
   password: string;
   avatar: string;
   role: "admin" | "service" | "client";
+  isVerified: boolean;
   verifyCode: string;
   verifyCodeExpiry: Date;
   isActive: boolean;
@@ -131,7 +132,7 @@ const ServiceRequestSchema: Schema<ServiceRequest> = new Schema({
 });
 
 const UserModel =
-  (mongoose.models.User as mongoose.Model<User>) ||
+  (mongoose.models?.User as mongoose.Model<User>) ||
   mongoose.model<User>("User", UserSchema);
 
 const NotificationSchema: Schema<Notification> = new Schema({
@@ -152,9 +153,11 @@ const NotificationSchema: Schema<Notification> = new Schema({
 });
 
 const ServiceRequestModel =
-  (mongoose.models.ServiceRequest as mongoose.Model<ServiceRequest>) ||
+  (mongoose.models?.ServiceRequest as mongoose.Model<ServiceRequest>) ||
   mongoose.model<ServiceRequest>("ServiceRequest", ServiceRequestSchema);
 
 const NotificationModel =
-  (mongoose.models.Notification as mongoose.Model<Notification>) ||
+  (mongoose.models?.Notification as mongoose.Model<Notification>) ||
   mongoose.model<Notification>("Notification", NotificationSchema);
+
+export { UserModel, ServiceRequestModel, NotificationModel };
