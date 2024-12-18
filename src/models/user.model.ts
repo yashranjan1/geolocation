@@ -12,7 +12,7 @@ export interface User extends Document {
   isActive: boolean;
   contact: number;
   rating: number;
-  location: {
+  location?: {
     coordinates: [number];
     //add more if needed
   };
@@ -59,6 +59,7 @@ const UserSchema: Schema<User> = new Schema({
     type: String,
     enum: ["admin", "service", "client"],
     required: [true, "Role is required"],
+    default: "client"
   },
   avatar: {
     type: String,
@@ -82,6 +83,10 @@ const UserSchema: Schema<User> = new Schema({
       message: "Contact must be exactly 10 digits long",
     },
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
   isActive: {
     type: Boolean,
     default: false,
@@ -89,11 +94,11 @@ const UserSchema: Schema<User> = new Schema({
   rating: {
     type: Number,
     default: 0,
-    required: [true, "Rating is required"],
+    // required: [true, "Rating is required"],
   },
   location: {
     coordinates: [Number],
-    required: [true, "Coordinates are required"],
+    // required: [true, "Coordinates are required"],
   },
   createdAt: {
     type: Date,
