@@ -5,15 +5,17 @@ import { CredentialsSignin, NextAuthConfig, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
+class InvalidLoginError extends CredentialsSignin {
+    code = "Invalid identifier or password"
+}
 
 class UserNotFoundError extends CredentialsSignin {
-    code = "USER_NOT_FOUND";
+    code = "User not found"
 }
 
-class InvalidCredentialsError extends CredentialsSignin {
-    code = "INVALID_CREDENTIALS";
+class UserNotVerifiedError extends CredentialsSignin {
+    code = "User not verified"
 }
-
  
 export const authConfig: NextAuthConfig = {
     pages: {
@@ -40,8 +42,6 @@ export const authConfig: NextAuthConfig = {
 
                 try{
                     
-                    const username = credentials.username;
-
                     const user = await UserModel.findOne({ 
                         $or: [
                             { email: credentials.identifier }, 
@@ -52,18 +52,31 @@ export const authConfig: NextAuthConfig = {
                     if (!user) {
                         throw new UserNotFoundError();
                     }
-                    
+
+                    if (!user.isVerified) {
+                        throw new UserNotVerifiedError();
+                    }
+
                     const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
 
+                    console.log(isPasswordCorrect)
+
                     if (!isPasswordCorrect) {
-                        throw new InvalidCredentialsError();
+                        throw new InvalidLoginError();
                     }
+
 
                     return user as User;
 
                 } catch (error) {
                     if (error instanceof UserNotFoundError) {
                         throw new UserNotFoundError(error.code);
+                    }
+                    else if (error instanceof InvalidLoginError) {
+                        throw new InvalidLoginError(error.code);
+                    }
+                    else if (error instanceof UserNotVerifiedError) {
+                        throw new UserNotVerifiedError(error.code);
                     }
                     else {
                         throw new Error("Error authenticating user");

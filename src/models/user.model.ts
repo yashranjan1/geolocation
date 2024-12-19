@@ -43,7 +43,6 @@ const UserSchema: Schema<User> = new Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-      select: false,
     },
     role: {
       type: String,
@@ -74,9 +73,10 @@ const UserSchema: Schema<User> = new Schema(
         message: "Contact must be exactly 10 digits long",
       },
     },
+    // FOR NOW, CHANGE LATER
     isVerified: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     rating: {
       type: Number,
