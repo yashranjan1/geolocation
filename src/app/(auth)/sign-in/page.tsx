@@ -79,53 +79,7 @@ const Page = () => {
     }
 
     return ( 
-        // <Card className="flex flex-col items-center justify-center w-full max-w-md px-10 py-5">
-        //     <CardHeader>
-        //         <CardTitle className="font-bold text-4xl">
-        //             Sign In
-        //         </CardTitle>
-        //     </CardHeader>
-        //     <CardContent className="w-full">
-        //         <Form {...form}>
-        //             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
-        //                 <FormField
-        //                     control={form.control}
-        //                     name="identifier"
-        //                     render={({ field }) => (
-        //                         <FormItem>
-        //                             <FormLabel>Email</FormLabel>
-        //                             <FormControl>
-        //                                 <Input placeholder="Username" {...field} />
-        //                             </FormControl>
-        //                         </FormItem>
-        //                     )}
-        //                 />
-        //                 <FormField
-        //                     name="password"
-        //                     control={form.control}
-        //                     render={({ field }) => (
-        //                         <FormItem>
-        //                             <FormLabel>Password</FormLabel>
-        //                             <FormControl>
-        //                                 <Input type="password" placeholder="Password" {...field} />
-        //                             </FormControl>
-        //                         </FormItem>
-        //                     )}
-        //                 />
-        //                 <Button className="w-full" type="submit" disabled={isSubmitting}>
-        //                      {
-        //                         isSubmitting ? 
-        //                         <Loader2 className="animate-spin" />
-        //                         : "Sign In"
-        //                      }
-        //                 </Button>
-        //             </form>
-        //         </Form>
-        //     </CardContent>
-        //     <CardFooter>
-        //         <span>Don't have an account? <Link href="/sign-up">Sign Up</Link></span>
-        //     </CardFooter>
-        // </Card>
+        
         <div className='flex-1 flex justify-center items-center'>
             <Card className='w-96 p-0.5 sm:p-5 drop-shadow-lg'>
                 <CardHeader className='font-bold text-2xl text-center'>
