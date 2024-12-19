@@ -3,13 +3,14 @@ import connectDB from "@/lib/dbConnect";
 import { UserModel } from "@/models/user.model";
 import bcrypt from "bcryptjs";
 
-export default async function POST(req: NextApiRequest) {
+export async function POST(req: Request) {
     
     await connectDB();
 
-    const { email, username, password, avatar, contact } = req.body;
 
     try {
+        
+        const { email, username, password, contact } = await req.json();
         
         const existingVerifiedUser = await UserModel.findOne({ 
             username,
@@ -61,7 +62,7 @@ export default async function POST(req: NextApiRequest) {
                         success: true, 
                         message: "User created successfully" 
                     },{
-                        status: 200,
+                        status: 201,
                     }
                 );
             }    
@@ -78,7 +79,6 @@ export default async function POST(req: NextApiRequest) {
                 email,
                 username,
                 password: hashedPassword,
-                avatar,
                 contact,
                 verifyCode: verifyCode,
                 verifyCodeExpiry: expiryDate,
@@ -91,7 +91,7 @@ export default async function POST(req: NextApiRequest) {
                     success: true, 
                     message: "User created successfully" 
                 },{
-                    status: 200,
+                    status: 201,
                 }
             );
         }

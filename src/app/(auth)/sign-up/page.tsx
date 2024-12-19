@@ -5,13 +5,22 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from 'react-hook-form';
 import signUpSchema, { SignUpSchema } from "@/schemas/signUpSchema";
-import { Form, FormField } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { ApiResponse } from "@/types/ApiResponse";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const SignUp = () => {
+
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const router = useRouter();
 
     const form = useForm<SignUpSchema>({
         resolver: zodResolver(signUpSchema),
@@ -19,20 +28,30 @@ const SignUp = () => {
             username: "",
             email: "",
             password: "",
-            avatar: "",
             contact: "",
         },
     });
     
     const onSubmit = async (data: SignUpSchema) => {
+
+        setIsSubmitting(true);
+
         try {
             const res = await axios.post("/api/sign-up", data);
 
-            if (res.status === 200) {
-                console.log("Sign up successful");
+            if (res.status === 201) {
+                toast.success("Sign up successful", {
+                    description: "Your account has been created successfully",
+                });
+                router.push("/sign-in");
             }
         } catch (error) {
-            console.log(error);
+            const axiosError = error as AxiosError<ApiResponse>;
+            toast.error("An error occurred", {
+                description: axiosError.response?.data.message as string,
+            });
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
@@ -50,60 +69,62 @@ const SignUp = () => {
                             control={form.control}
                             name="username"
                             render={({ field }) => (
-                                <>
-                                    <Label>Username</Label>
-                                    <Input placeholder="Username" {...field} />
-                                </>
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Username" {...field} />
+                                    </FormControl>
+                                </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="email"
+                        <FormField 
+                            name="email" 
+                            control={form.control} 
                             render={({ field }) => (
-                                <>
-                                    <Label>Email</Label>
-                                    <Input placeholder="Email" {...field} />
-                                </>
-                            )}
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Email" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )} 
                         />
                         <FormField
-                            control={form.control}
                             name="password"
+                            control={form.control}
                             render={({ field }) => (
-                                <>
-                                    <Label>Password</Label>
-                                    <Input placeholder="Password" {...field} />
-                                </>
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="Password" {...field} />
+                                    </FormControl>
+                                </FormItem>
                             )}
                         />
                         <FormField
-                            control={form.control}
-                            name="avatar"
-                            render={({ field }) => ( 
-                                <>
-                                    <Label>Avatar</Label>
-                                    <Input placeholder="Avatar" {...field} />
-                                </>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
                             name="contact"
+                            control={form.control}
                             render={({ field }) => (
-                                <>
-                                    <Label>Contact Number</Label>
-                                    <Input placeholder="Contact Number" {...field} />
-                                </>
-                            )}
+                                <FormItem>
+                                    <FormLabel>Contact Number</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Contact Number" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}  
                         />
-                        <Button className="w-full" type="submit">
-                            Sign Up
+                        <Button className="w-full" type="submit" disabled={isSubmitting}>
+                             {
+                                isSubmitting ? 
+                                <Loader2 className="animate-spin" />
+                                : "Sign Up"
+                             }
                         </Button>
                     </form>
                 </Form>
             </CardContent>
             <CardFooter>
-                <p>Already have an account? <Link href="/login">Login</Link></p>
+                <span>Already have an account? <Link href="/sign-in">Login</Link></span>
             </CardFooter>
         </Card>
     );
