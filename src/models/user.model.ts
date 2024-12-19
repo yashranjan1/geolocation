@@ -53,13 +53,12 @@ const UserSchema: Schema<User> = new Schema(
     },
     avatar: {
       type: String,
-      required: [true, "Avatar is required"],
       default:
         "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png",
     },
     verifyCode: {
       type: String,
-      required: [true, "Avatar is required"],
+      required: [true, "VerifyCode is required"],
     },
     verifyCodeExpiry: {
       type: Date,
