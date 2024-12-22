@@ -5,10 +5,16 @@ import { signOut, useSession } from "next-auth/react";
 import React from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const { data: session } = useSession();
   const user: User = session?.user as User;
+
+  const avatarFallback = user.fullname
+    .split(" ")
+    .map((word) => word[0])
+    .join("");
 
   return (
     <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white">
@@ -18,7 +24,11 @@ const Navbar = () => {
         </a>
         {session ? (
           <>
-            <span className="mr-4">Welcome, {user.username || user.email}</span>
+            <Avatar>
+              <AvatarImage src={user.avatar} />
+              <AvatarFallback>{avatarFallback.toUpperCase()}</AvatarFallback>
+            </Avatar>
+
             <Button
               onClick={() => signOut()}
               className="w-full md:w-auto bg-slate-100 text-black"
