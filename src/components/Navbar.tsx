@@ -12,9 +12,11 @@ const Navbar = () => {
   const user: User = session?.user as User;
 
   const avatarFallback = user.fullname
-    .split(" ")
-    .map((word) => word[0])
-    .join("");
+    ? user.fullname
+        .split(" ")
+        .map((word) => word[0])
+        .join("")
+    : "US";
 
   return (
     <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white">
