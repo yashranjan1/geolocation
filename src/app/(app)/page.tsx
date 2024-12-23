@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import { User } from "next-auth";
 
@@ -20,7 +19,7 @@ function Page() {
 //   };
 
   return (
-    <main className="min-h-[80vh] flex flex-col items-center justify-center bg-gray-100 w-full">
+    <main className="flex flex-1 flex-col items-center justify-center h-full">
       <section className="flex-1 flex flex-col items-center justify-center text-center">
         {user ? (
           <>
@@ -38,9 +37,9 @@ function Page() {
               Find mechanics nearby or view your requests.
             </p>
             <Link href="/mechanics">
-              <button className="mt-4 px-6 py-3 bg-purple-600 text-white rounded-lg">
+              <Button className="mt-4 px-6 py-3 bg-purple-600 text-white">
                 Find Mechanics
-              </button>
+              </Button>
             </Link>
           </>
         ) : (

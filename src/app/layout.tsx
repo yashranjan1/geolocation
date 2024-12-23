@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@/components/ThemeProvider"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,21 +28,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+        >
           <SessionProvider>
-          {/* add navbar here */}
-          <Navbar className={`${geistSans.className} ${geistMono.variable}`} />
-          <main
-            className={`${geistSans.className} ${geistMono.variable} flex flex-col min-h-screen`}
-          >
-            {children}
-          </main>
-          <Toaster />
-          <Footer />
+            <div className="flex flex-col min-h-screen">
+              <Navbar className={`${geistSans.className} ${geistMono.variable}`} />
+              <main
+                className={`${geistSans.className} ${geistMono.variable} flex-1 flex flex-col`}
+              >
+                {children}
+              </main>
+              <Toaster />
+              <Footer />
+            </div>
           </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

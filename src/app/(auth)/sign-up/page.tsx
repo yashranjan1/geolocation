@@ -56,77 +56,80 @@ const SignUp = () => {
     }
 
     return ( 
-        <Card className="flex flex-col items-center justify-center w-full max-w-md px-10 py-5">
-            <CardHeader>
-                <CardTitle className="font-bold text-4xl">
-                    Sign Up
-                </CardTitle>
-            </CardHeader>
-            <CardContent className="w-full">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
-                        <FormField
-                            control={form.control}
-                            name="username"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Username</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Username" {...field} />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField 
-                            name="email" 
-                            control={form.control} 
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Email" {...field} />
-                                    </FormControl>
-                                </FormItem>
-                            )} 
-                        />
-                        <FormField
-                            name="password"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Password</FormLabel>
-                                    <FormControl>
-                                        <Input type="password" placeholder="Password" {...field} />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            name="contact"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Contact Number</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Contact Number" {...field} />
-                                    </FormControl>
-                                </FormItem>
-                            )}  
-                        />
-                        <Button className="w-full" type="submit" disabled={isSubmitting}>
-                             {
-                                isSubmitting ? 
-                                <Loader2 className="animate-spin" />
-                                : "Sign Up"
-                             }
-                        </Button>
-                    </form>
-                </Form>
-            </CardContent>
-            <CardFooter>
-                <span>Already have an account? <Link href="/sign-in">Login</Link></span>
-            </CardFooter>
-        </Card>
+        
+        <div className='flex-1 flex justify-center items-center'>
+            <Card className="flex flex-col items-center justify-center w-full max-w-md px-10 py-5">
+                <CardHeader>
+                    <CardTitle className="font-bold text-4xl">
+                        Sign Up
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="w-full">
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
+                            <FormField
+                                control={form.control}
+                                name="username"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Username</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Username" {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField 
+                                name="email" 
+                                control={form.control} 
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Email" {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )} 
+                            />
+                            <FormField
+                                name="password"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl>
+                                            <Input type="password" placeholder="Password" {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="contact"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Contact Number</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Contact Number" {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}  
+                            />
+                            <Button className="w-full" type="submit" disabled={isSubmitting}>
+                                {
+                                    isSubmitting ? 
+                                    <Loader2 className="animate-spin" />
+                                    : "Sign Up"
+                                }
+                            </Button>
+                        </form>
+                    </Form>
+                </CardContent>
+                <CardFooter>
+                    <span>Already have an account? <Link href="/sign-in">Login</Link></span>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }
  
