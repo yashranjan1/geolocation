@@ -13,6 +13,7 @@ export interface User extends Document {
   rating: number;
   enterpriseName: string;
   createdAt: Date;
+  services: Schema.Types.ObjectId[];
 }
 
 export interface ServiceRequest extends Document {
@@ -21,6 +22,7 @@ export interface ServiceRequest extends Document {
   description: string; //problem description
   status: string;
   createdAt: Date;
+  userId: Schema.Types.ObjectId;
 }
 
 const UserSchema: Schema<User> = new Schema(
@@ -88,6 +90,7 @@ const UserSchema: Schema<User> = new Schema(
       type: String,
       maxlength: [40, "Too long"],
     },
+    services: [{ type: Schema.Types.ObjectId, ref: "ServiceRequest" }],
   },
   { timestamps: true }
 );
@@ -112,6 +115,10 @@ const ServiceRequestSchema: Schema<ServiceRequest> = new Schema(
       enum: ["pending", "accepted", "completed", "cancelled"],
       default: "pending",
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    }
   },
   { timestamps: true }
 );

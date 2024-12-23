@@ -22,10 +22,10 @@ function Page() {
   return (
     <main className="min-h-[80vh] flex flex-col items-center justify-center bg-gray-100 w-full">
       <section className="flex-1 flex flex-col items-center justify-center text-center">
-        {session ? (
+        {user ? (
           <>
             <h2 className="text-3xl font-bold">
-              Welcome back, {session.user.username}!
+              Welcome back, {user.username}!
             </h2>
 
 			{/* for displaying different dashboards based on user's role (not defined role inside sessions yet)*/}

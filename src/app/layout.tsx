@@ -33,9 +33,9 @@ export default function RootLayout({
       >
           <SessionProvider>
           {/* add navbar here */}
-          <Navbar />
+          <Navbar className={`${geistSans.className} ${geistMono.variable}`} />
           <main
-            className={`${geistSans.className} ${geistMono.variable} min-h-screen`}
+            className={`${geistSans.className} ${geistMono.variable} flex flex-col min-h-screen`}
           >
             {children}
           </main>
