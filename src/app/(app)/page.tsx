@@ -33,12 +33,12 @@ function Page() {
               {user?.role ? renderDashboard() : "Explore our features and services."}
             </p> */}
 
-						<p className="mt-2 text-gray-600">
-							Find mechanics nearby or view your requests.
+						<p className="mt-2">
+							Make a request nearby or view your requests.
 						</p>
-						<Link href="/mechanics">
-							<Button className="mt-4 px-6 py-3 bg-purple-600 text-white">
-								Find Mechanics
+						<Link href="/service-request">
+							<Button className="mt-4 px-6 py-">
+                                Make a Request
 							</Button>
 						</Link>
 					</>
