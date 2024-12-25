@@ -18,7 +18,7 @@ export interface User extends Document {
 
 export interface ServiceRequest extends Document {
   title: string; //title highlighting the issue
-  media: string; //cloudinary url
+  media: string[]; //cloudinary url
   description: string; //problem description
   status: string;
   createdAt: Date;
@@ -103,7 +103,8 @@ const ServiceRequestSchema: Schema<ServiceRequest> = new Schema(
       minlength: [4, "Title should be minimum 4 characters long"],
     },
     media: {
-      type: String,
+      type: [String],
+      required: [true, "You need to upload atleast one image"],
     },
     description: {
       type: String,

@@ -16,6 +16,7 @@ export const ourFileRouter = {
        */
       maxFileSize: "4MB",
       maxFileCount: 1,
+
     },
   })
     // Set permissions and file types for this FileRoute
@@ -36,7 +37,7 @@ export const ourFileRouter = {
       console.log("file url", file.url);
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId };
+      return { appUrl: file.appUrl };
     }),
 } satisfies FileRouter;
 

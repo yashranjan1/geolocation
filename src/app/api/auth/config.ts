@@ -65,8 +65,6 @@ export const authConfig: NextAuthConfig = {
                         throw new InvalidLoginError();
                     }
 
-                    console.log("db", user)
-
                     return user as User;
 
                 } catch (error) {
@@ -104,7 +102,6 @@ export const authConfig: NextAuthConfig = {
                 session.user.username = token.username;
                 session.user.avatar = token.avatar;
             }
-            console.log("sessoion", session)
             return session;
         },
     },

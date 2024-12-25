@@ -4,17 +4,18 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader, Loader2, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MakeRequestSchema } from "@/schemas/makeReqSchema";
 import { useSession } from "next-auth/react";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import BetterUploadButton from "@/components/BetterUploadButton";
 import axios from "axios";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
 
 export default function MakeRequest() {
 
@@ -23,6 +24,9 @@ export default function MakeRequest() {
     const { data: session } = useSession()
     const user = session?.user;
 
+    const [fileUrls, setFileUrls] = useState<Array<string>>([]);
+
+    const [isUploading, setIsUploading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const form = useForm<z.infer<typeof MakeRequestSchema>>({
@@ -30,7 +34,7 @@ export default function MakeRequest() {
         defaultValues: {
             title: "",
             description: "",
-            media: "",
+            media: [],
             status: "pending",
             userId: user?.id,
         },
@@ -38,20 +42,37 @@ export default function MakeRequest() {
 
     const onSubmit = async (data: z.infer<typeof MakeRequestSchema>) => {
         setIsSubmitting(true);
+
+        console.log(data)
+
         try {
             const res = await axios.post("/api/add-request", data);
-            if (res.status === 201) {
-                router.push("/service-request");
-            }
-            toast.success("Request submitted successfully", {
-                description: "Your request has been submitted successfully",
-            });
+            toast.success("Request submitted", { 
+                description: "Request submitted successfully",
+             });
+            router.push("/");
         } catch (error) {
-            console.log(error);
-            toast.error("An error occurred", {
-                description: "Something went wrong, please try again",
-            });
-            setIsSubmitting(false);
+            toast.error("An error occured", {
+                description: "Something went wrong",
+             });
+        }
+    }
+
+    const onDelete = async (fileKey: string) => {
+        try {
+            await axios.delete(`/api/delete-file-on-uploadthing/${fileKey}`);
+
+            toast.success("File deleted", { 
+                description: "File deleted successfully",
+             });
+
+            setFileUrls(fileUrls.filter(url => url.split("/").pop() !== fileKey));
+
+        } catch (error) {
+            
+            toast.error("An error occured", {
+                description: "File could not be deleted",
+             });
         }
     }
 
@@ -84,19 +105,72 @@ export default function MakeRequest() {
                             </FormItem>
                         )}
                     />
+
+                    
+
                     <FormField
                         control={form.control}
                         name="media"
-                        render={({ field }) => (
+                        render={({ field }) => (  
                             <FormItem className="w-full flex flex-col space-y-3">
-                                <FormLabel className="font-bold text-xl">Photos</FormLabel>
+                                <FormLabel className="font-bold flex gap-3 text-xl cursor-pointer" htmlFor="upload-button">
+                                    Upload Images
+                                        {
+                                            isUploading && 
+                                            <Loader className="animate-spin" />
+                                        }
+                                        {
+                                            !isUploading && 
+                                            <Upload className="ml-2" />
+                                        }
+                                </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Media" {...field} />
+                                    <BetterUploadButton 
+                                        field={field}
+                                        isUploading={isUploading} 
+                                        setIsUploading={setIsUploading} 
+                                        setFileUrls={setFileUrls} 
+                                        fileUrls={fileUrls} 
+                                    />
                                 </FormControl>
                             </FormItem>
                         )}
                     />
                     
+
+                    {
+                        !(fileUrls.length < 5) &&
+                        <div className="text-sm text-red-500"> 
+                            You can only upload upto 5 images
+                        </div>
+                    }
+
+                    {
+                        fileUrls.length > 0 &&
+                        <div className="grid grid-cols-3 gap-2">
+                            {fileUrls.map((url, index) => (
+                                <div className="w-full flex justify-end">
+                                    <div className="absolute">
+                                        <Button 
+                                            type="button"
+                                            variant={"link"} 
+                                            className="text-black"
+                                            onClick={() => onDelete(url.split("/").pop() as string)}
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                    <Image
+                                        src={url}
+                                        alt={`Image-${index + 1}`}
+                                        width={256}
+                                        height={256}
+                                        className="h-full w-full rounded-md object-cover col-span-1"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    }
                     <Button className="max-w-fit" type="submit" disabled={isSubmitting}>
                         {
                             isSubmitting ? 
