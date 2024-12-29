@@ -47,7 +47,7 @@ export async function GET(request: Request, { params }: Params) {
         return Response.json({
             success: true,
             message: "Service request found",
-            data: serviceReq,
+            request: serviceReq,
         }, {
             status: 200,
         });

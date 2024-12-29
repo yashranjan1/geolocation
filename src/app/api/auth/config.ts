@@ -24,12 +24,6 @@ export const authConfig: NextAuthConfig = {
         error: "/auth/error", 
     },
     providers: [
-        // enable later
-        // GoogleProvider({
-        //     clientId: process.env.GOOGLE_CLIENT_ID,
-        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        // }),
-
         Credentials({
             name: "Credentials",
             credentials: {
@@ -58,8 +52,6 @@ export const authConfig: NextAuthConfig = {
                     }
 
                     const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
-
-                    console.log(isPasswordCorrect)
 
                     if (!isPasswordCorrect) {
                         throw new InvalidLoginError();

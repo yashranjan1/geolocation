@@ -21,7 +21,8 @@ import {
 	DropdownMenuSub,
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
-	DropdownMenuSubContent
+	DropdownMenuSubContent,
+    DropdownMenuGroup
   } from "@/components/ui/dropdown-menu"
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -71,9 +72,17 @@ const Navbar = ({ className }: { className: string }) => {
                                 className="w-48 font-[family-name:var(--font-geist-sans)]"
                                 align="end"
                                 > 
-                                <DropdownMenuItem onClick={() => setIsOpen(true)}>
-                                    Account Settings
-                                </DropdownMenuItem>
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem onClick={() => setIsOpen(true)}>
+                                        Account Settings
+                                    </DropdownMenuItem>
+                                    <Link href={'/dashboard/get-requests'}>
+                                        <DropdownMenuItem>
+                                                Requests
+                                        </DropdownMenuItem>
+                                    </Link>
+                                </DropdownMenuGroup>
+
                                 <DropdownMenuSub>
                                     <DropdownMenuSubTrigger>Dark Mode</DropdownMenuSubTrigger>
                                     <DropdownMenuPortal>
@@ -93,7 +102,7 @@ const Navbar = ({ className }: { className: string }) => {
                             </DropdownMenuContent>
                         </DropdownMenu>
 
-                        : <Link href={'/sign-in'} className="font-semibold sm:text-xl">Sign In</Link>
+                        : <Link href={'/sign-in'} className="font-semibold sm:text-xl text-white">Sign In</Link>
                     }
                 </div>
             </nav>
