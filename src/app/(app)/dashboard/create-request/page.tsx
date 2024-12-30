@@ -43,10 +43,8 @@ export default function MakeRequest() {
     const onSubmit = async (data: z.infer<typeof MakeRequestSchema>) => {
         setIsSubmitting(true);
 
-        console.log(data)
-
         try {
-            const res = await axios.post("/api/add-request", data);
+            await axios.post("/api/add-request", data);
             toast.success("Request submitted", { 
                 description: "Request submitted successfully",
              });
