@@ -13,7 +13,6 @@ export interface User extends Document {
   rating: number;
   enterpriseName: string;
   createdAt: Date;
-  services: Schema.Types.ObjectId[];
 }
 
 export interface ServiceRequest extends Document {
@@ -90,7 +89,6 @@ const UserSchema: Schema<User> = new Schema(
       type: String,
       maxlength: [40, "Too long"],
     },
-    services: [{ type: Schema.Types.ObjectId, ref: "ServiceRequest" }],
   },
   { timestamps: true }
 );
