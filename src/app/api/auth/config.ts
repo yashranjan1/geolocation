@@ -24,12 +24,6 @@ export const authConfig: NextAuthConfig = {
         error: "/auth/error", 
     },
     providers: [
-        // enable later
-        // GoogleProvider({
-        //     clientId: process.env.GOOGLE_CLIENT_ID,
-        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        // }),
-
         Credentials({
             name: "Credentials",
             credentials: {
@@ -59,12 +53,9 @@ export const authConfig: NextAuthConfig = {
 
                     const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
 
-                    console.log(isPasswordCorrect)
-
                     if (!isPasswordCorrect) {
                         throw new InvalidLoginError();
                     }
-
 
                     return user as User;
 
@@ -92,6 +83,7 @@ export const authConfig: NextAuthConfig = {
                 token._id = user._id?.toString();
                 token.isVerified = user.isVerified;
                 token.username = user.username;
+                token.avatar = user.avatar;
             }
             return token;
         },
@@ -100,6 +92,7 @@ export const authConfig: NextAuthConfig = {
                 session.user.id = token._id;
                 session.user.isVerified = token.isVerified;
                 session.user.username = token.username;
+                session.user.avatar = token.avatar;
             }
             return session;
         },

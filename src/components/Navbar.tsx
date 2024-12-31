@@ -1,67 +1,114 @@
 "use client";
 
 import { User } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
-import React from "react";
-import { Button } from "./ui/button";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuPortal,
+	DropdownMenuRadioGroup,
+	DropdownMenuRadioItem,
+	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubTrigger,
+	DropdownMenuTrigger,
+	DropdownMenuSubContent,
+    DropdownMenuGroup
+  } from "@/components/ui/dropdown-menu"
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useTheme } from "next-themes";
+import { signOut, useSession } from "next-auth/react";
+import { useState } from "react";
 
-const Navbar = () => {
-  const { data: session } = useSession();
-  const user: User = session?.user as User;
+const Navbar = ({ className }: { className: string }) => {
+	
+	const { theme, setTheme } = useTheme()
 
-  const avatarFallback = user.fullname
-    ? user.fullname
-        .split(" ")
-        .map((word) => word[0])
-        .join("")
-    : "US";
+    const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <nav className="p-4 md:p-6 shadow-md bg-gray-900 text-white">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-        <a href="/" className="text-xl font-bold mb-4 md:mb-0">
-          AutoResQ
-        </a>
-        {session ? (
-          <>
-            <Avatar>
-              <AvatarImage src={user.avatar} />
-              <AvatarFallback>{avatarFallback.toUpperCase()}</AvatarFallback>
-            </Avatar>
+	const { data: session } = useSession();
+	const user: User = session?.user;
 
-            <Button
-              onClick={() => signOut()}
-              className="w-full md:w-auto bg-slate-100 text-black"
-              variant="outline"
-            >
-              Logout
-            </Button>
-          </>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Link href="/sign-in">
-              <Button
-                className="w-full md:w-auto bg-slate-100 text-black"
-                variant={"outline"}
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/sign-up">
-              <Button
-                className="w-full md:w-auto bg-black text-slate-100"
-                variant={"outline"}
-              >
-                Sign Up
-              </Button>
-            </Link>
-          </div>
-        )}
-      </div>
-    </nav>
-  );
+
+	return (
+        <>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Are you absolutely sure?</DialogTitle>
+                        <DialogDescription>
+                            This action cannot be undone. This will permanently delete your account
+                            and remove your data from our servers.
+                        </DialogDescription>
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
+            <nav className={`p-4 px-10 shadow-md bg-gray-900 ${className} flex items-center`}>
+                <div className="flex-1">
+                    <Link href={"/"} className="text-xl sm:text-3xl font-bold text-white">AutoResQ</Link>
+                </div>
+                <div>
+                    {
+                        session ? 
+                        
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Avatar>
+                                    <AvatarImage src={user?.avatar as string}/>
+                                    <AvatarFallback>{user?.username?.[0].toUpperCase()}</AvatarFallback>
+                                </Avatar>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent 
+                                className="w-48 font-[family-name:var(--font-geist-sans)]"
+                                align="end"
+                                > 
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem onClick={() => setIsOpen(true)}>
+                                        Account Settings
+                                    </DropdownMenuItem>
+                                    <Link href={'/dashboard/get-requests'}>
+                                        <DropdownMenuItem>
+                                                Requests
+                                        </DropdownMenuItem>
+                                    </Link>
+                                </DropdownMenuGroup>
+
+                                <DropdownMenuSub>
+                                    <DropdownMenuSubTrigger>Dark Mode</DropdownMenuSubTrigger>
+                                    <DropdownMenuPortal>
+                                        <DropdownMenuSubContent className="font-[family-name:var(--font-geist-sans)]">
+                                            <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                                                <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="system">System</DropdownMenuRadioItem>
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuSubContent>
+                                    </DropdownMenuPortal>
+                                </DropdownMenuSub>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => signOut()}>
+                                    Log out
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        : <Link href={'/sign-in'} className="font-semibold sm:text-xl text-white">Sign In</Link>
+                    }
+                </div>
+            </nav>
+        </>
+
+	);
 };
 
 export default Navbar;

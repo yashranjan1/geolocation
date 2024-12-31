@@ -5,7 +5,7 @@ import React from "react";
 const Footer = () => {
   return (
     //added a basic footer for now
-    <footer className="w-full p-4 bg-gray-200 text-center text-gray-600">
+    <footer className="w-full p-4 text-center">
       © {new Date().getFullYear()} AutoResQ. All rights reserved.
     </footer>
   );
