@@ -79,6 +79,7 @@ export async function POST(req: Request) {
                 username,
                 password: hashedPassword,
                 contact,
+                role: "client",
                 verifyCode: verifyCode,
                 verifyCodeExpiry: expiryDate,
             });

@@ -83,6 +83,7 @@ export async function POST(req: Request) {
                     latitude,
                     longitude
                 },
+                role: "mechanic",
                 verifyCode: verifyCode,
                 verifyCodeExpiry: expiryDate,
             });
