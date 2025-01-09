@@ -1,4 +1,3 @@
-import { NextApiRequest,  } from "next";
 import connectDB from "@/lib/dbConnect";
 import { UserModel } from "@/models/user.model";
 import bcrypt from "bcryptjs";
@@ -10,7 +9,7 @@ export async function POST(req: Request) {
 
     try {
         
-        const { email, username, password, contact } = await req.json();
+        const { email, username, password, contact, latitude, longitude } = await req.json();
         
         const existingVerifiedUser = await UserModel.findOne({ 
             username,
@@ -80,6 +79,11 @@ export async function POST(req: Request) {
                 username,
                 password: hashedPassword,
                 contact,
+                location: {
+                    latitude,
+                    longitude
+                },
+                role: "mechanic",
                 verifyCode: verifyCode,
                 verifyCodeExpiry: expiryDate,
             });
