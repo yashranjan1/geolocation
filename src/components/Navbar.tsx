@@ -78,7 +78,7 @@ const Navbar = ({ className }: { className: string }) => {
                                     </DropdownMenuItem>
                                     <Link href={'/dashboard/get-requests'}>
                                         <DropdownMenuItem>
-                                                Requests
+                                            Requests
                                         </DropdownMenuItem>
                                     </Link>
                                 </DropdownMenuGroup>
@@ -96,7 +96,9 @@ const Navbar = ({ className }: { className: string }) => {
                                     </DropdownMenuPortal>
                                 </DropdownMenuSub>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => signOut()}>
+                                <DropdownMenuItem onClick={() => signOut({
+                                    redirectTo: "/sign-in"
+                                })}>
                                     Log out
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
