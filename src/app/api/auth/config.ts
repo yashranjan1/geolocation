@@ -17,12 +17,8 @@ class UserNotVerifiedError extends CredentialsSignin {
     code = "User not verified"
 }
  
-export const authConfig: NextAuthConfig = {
-    pages: {
-        signIn: "/auth/signin",
-        signOut: "/auth/signout",
-        error: "/auth/error", 
-    },
+export const authConfig = {
+
     providers: [
         Credentials({
             name: "Credentials",
@@ -78,6 +74,7 @@ export const authConfig: NextAuthConfig = {
         }),
     ],
     callbacks: {
+
         async jwt({ token, user }) {
 
             if (user) {
@@ -98,11 +95,17 @@ export const authConfig: NextAuthConfig = {
                 session.user.avatar = token.avatar;
                 session.user.role = token.role;
             }
+
+        async redirect({ url, baseUrl }) {
+            return baseUrl;
+        },
+        async session({ session, token, user }) {
+            session.user = user;
+
             return session;
         },
     },
-    secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: "jwt",
     },
-}
+} satisfies NextAuthConfig
