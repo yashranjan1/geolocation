@@ -74,11 +74,34 @@ export const authConfig = {
         }),
     ],
     callbacks: {
+
+        async jwt({ token, user }) {
+
+            if (user) {
+                token._id = user._id?.toString();
+                token.isVerified = user.isVerified;
+                token.username = user.username;
+                token.avatar = user.avatar;
+                token.role = user.role;
+            }
+            return token;
+        },
+        async session({ session, token }) {
+
+            if (session.user) {
+                session.user.id = token._id;
+                session.user.isVerified = token.isVerified;
+                session.user.username = token.username;
+                session.user.avatar = token.avatar;
+                session.user.role = token.role;
+            }
+
         async redirect({ url, baseUrl }) {
             return baseUrl;
         },
         async session({ session, token, user }) {
             session.user = user;
+
             return session;
         },
     },
