@@ -5,50 +5,73 @@ import { useParams } from 'next/navigation';
 import { io, Socket } from 'socket.io-client';
 import { useSession } from 'next-auth/react';
 
+interface LocationData {
+  latitude: number;
+  longitude: number;
+}
+
 export default function ChatRoom() {
-  const { roomId } = useParams();  
+  const { roomId } = useParams();
   const room = roomId as string;
 
-  const { data: session } = useSession(); // Get user session
-  const role = session?.user.role; // Get role from session
+  const { data: session } = useSession();
+  const role = session?.user.role;
 
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [messages, setMessages] = useState<string[]>([]);
-  const [message, setMessage] = useState<string>('');
+  const [location, setLocation] = useState<LocationData[]>([]);
 
   useEffect(() => {
-    if (!room || !role) return; // Wait until room and role are available
+    if (!room || !role) return;
 
-    // Initialize the socket connection
-    const newSocket = io('http://localhost:3001'); // Replace with your server's URL if needed
+    const socketServerUrl = process.env.NEXT_PUBLIC_SOCKETSERVER_URL;
+    if (!socketServerUrl) {
+      console.error('Please set the NEXT_PUBLIC_SOCKETSERVER_URL environment variable.');
+      return;
+    }
+
+    console.log('Connecting to socket server...', socketServerUrl);
+    const newSocket = io(socketServerUrl);
     setSocket(newSocket);
 
-    // Join the room with role
     newSocket.emit('init', { room, role });
 
-    // Handle incoming messages
-    newSocket.on('recv-location', (msg: string) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
+
+    newSocket.on('recv-location', ({ latitude, longitude }: LocationData) => {
+      console.log('Received location:', { latitude, longitude });
+      setLocation((prevData) => [...prevData, { latitude, longitude }]);
     });
 
-    // Handle error events
+
     newSocket.on('error', (error: string) => {
       alert(error);
-      newSocket.disconnect(); // Disconnect if an error occurs
-      setSocket(null); // Clear socket state
+      newSocket.disconnect();
+      setSocket(null);
     });
 
-    // Cleanup on component unmount
+
+    let locationInterval: NodeJS.Timer;
+    if (navigator.geolocation) {
+      locationInterval = setInterval(() => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            console.log('Sending location:', { latitude, longitude });
+            newSocket.emit('send-location', { room, latitude, longitude });
+          },
+          (error) => {
+            console.error('Error getting location:', error);
+          }
+        );
+      }, 10000);
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+
+
     return () => {
       newSocket.disconnect();
     };
   }, [room, role]);
-
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
-    socket?.emit('send-location', { room, message });
-    setMessage(''); // Clear the input field
-  };
 
   if (!session) {
     return <div>Please sign in to chat</div>;
@@ -59,26 +82,15 @@ export default function ChatRoom() {
       <h1>Chat Room: {room}</h1>
       <h2>Role: {role}</h2>
 
-      {/* Chat Messages */}
+      {/* Display Received Locations */}
       <div style={{ marginTop: '20px' }}>
         <ul>
-          {messages.map((msg, index) => (
+          {location.map(({ latitude, longitude }, index) => (
             <li key={index}>
-              <strong>{msg}</strong>
+              <strong>Latitude:</strong> {latitude}, <strong>Longitude:</strong> {longitude}
             </li>
           ))}
         </ul>
-      </div>
-
-      {/* Message Input */}
-      <div style={{ marginTop: '20px' }}>
-        <input
-          type="text"
-          placeholder="Type your message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button onClick={handleSendMessage}>Send</button>
       </div>
     </div>
   );
